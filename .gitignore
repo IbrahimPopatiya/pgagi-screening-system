@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+*.egg-info/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+
+# Environment secrets
+.env
+.env.local
+
+# Vector DB / generated data (regenerate via scripts/ingest.py)
+backend/data/chroma/
+backend/data/*.sqlite3
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.vscode/
