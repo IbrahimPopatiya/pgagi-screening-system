@@ -22,3 +22,5 @@ backend/data/*.sqlite3
 .DS_Store
 Thumbs.db
 .vscode/
+
+backend/data/source_books
