@@ -2,11 +2,12 @@ import json
 from sqlalchemy.orm import Session as DBSession
 from app.models.db_models import InterviewSession, Question, Answer
 from app.models.schemas import ResumeProfile
-from app.core.roles import ROLE_COLLECTIONS
+from app.core.roles import ROLE_COLLECTIONS, ROLE_CORE_TOPICS
 from app.services.resume_parser import extract_text_from_resume, parse_resume
 from app.services.query_builder import build_retrieval_queries
 from app.services.retriever import retrieve_chunks
 from app.services.question_generator import generate_question
+from app.services.answer_scorer import score_answer
 
 
 def create_session(db: DBSession, role: str) -> InterviewSession:
@@ -88,15 +89,31 @@ def get_summary(db: DBSession, session_id: int) -> dict:
     topics = set()
     for q in session.questions:
         source = json.loads(q.source_chunks_json) if q.source_chunks_json else {}
+
+        score, justification = None, None
+        if q.answer and q.answer.text.strip():
+            try:
+                result = score_answer(q.text, q.answer.text)
+                score, justification = result.score, result.justification
+            except Exception:
+                pass  # scoring is a best-effort enhancement (LLM call) — never block the summary on it
+
         qa_pairs.append({
             "question": q.text,
             "answer": q.answer.text if q.answer else None,
             "rationale": q.rationale,
             "difficulty": q.difficulty,
             "source_page": source.get("page"),
+            "score": score,
+            "score_justification": justification,
         })
         if source.get("source_query"):
             topics.add(source["source_query"].split("about ")[-1])
+
+    core_topics = ROLE_CORE_TOPICS.get(session.role, [])
+    covered_lower = " ".join(topics).lower()
+    matched = sum(1 for t in core_topics if t.lower() in covered_lower)
+    coverage_percent = round((matched / len(core_topics)) * 100) if core_topics else 0
 
     session.status = "completed"
     db.commit()
@@ -106,6 +123,7 @@ def get_summary(db: DBSession, session_id: int) -> dict:
         "role": session.role,
         "qa_pairs": qa_pairs,
         "topics_covered": sorted(topics),
+        "coverage_percent": coverage_percent,
     }
 
 

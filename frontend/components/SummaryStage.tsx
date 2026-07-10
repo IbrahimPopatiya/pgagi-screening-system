@@ -45,7 +45,7 @@ export default function SummaryStage() {
         </p>
 
         {summary.topics_covered.length > 0 && (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 mb-5">
             {summary.topics_covered.map((topic) => (
               <span key={topic} className="text-xs font-medium bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full">
                 {topic}
@@ -53,6 +53,19 @@ export default function SummaryStage() {
             ))}
           </div>
         )}
+
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs font-medium text-slate-500">Core topic coverage</span>
+            <span className="text-xs font-medium text-slate-700">{summary.coverage_percent}%</span>
+          </div>
+          <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-slate-900 rounded-full transition-all"
+              style={{ width: `${summary.coverage_percent}%` }}
+            />
+          </div>
+        </div>
       </div>
 
       {summary.qa_pairs.map((qa, i) => (
@@ -69,9 +82,15 @@ export default function SummaryStage() {
             )}
           </div>
           <p className="text-slate-900 text-sm mb-3">{qa.question}</p>
-          <p className="text-slate-600 text-sm bg-slate-50 border border-slate-200 rounded-lg p-3">
+          <p className="text-slate-600 text-sm bg-slate-50 border border-slate-200 rounded-lg p-3 mb-2">
             {qa.answer ?? <span className="italic text-slate-400">No answer submitted</span>}
           </p>
+          {qa.score !== null && (
+            <div className="flex items-start gap-2 text-xs">
+              <span className="font-medium text-slate-700 whitespace-nowrap">Score: {qa.score}/5</span>
+              {qa.score_justification && <span className="text-slate-400">— {qa.score_justification}</span>}
+            </div>
+          )}
         </div>
       ))}
 

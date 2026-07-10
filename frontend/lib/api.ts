@@ -8,6 +8,8 @@ export interface QASummaryItem {
   rationale: string | null;
   difficulty: string | null;
   source_page: number | null;
+  score: number | null;
+  score_justification: string | null;
 }
 
 export interface SessionSummary {
@@ -15,6 +17,7 @@ export interface SessionSummary {
   role: string;
   qa_pairs: QASummaryItem[];
   topics_covered: string[];
+  coverage_percent: number;
 }
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {

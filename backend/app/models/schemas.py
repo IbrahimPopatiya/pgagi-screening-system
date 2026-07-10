@@ -14,6 +14,12 @@ class GeneratedQuestion(BaseModel):
     rationale: str
     difficulty: Literal["easy", "medium", "hard"]
 
+
+class AnswerScore(BaseModel):
+    score: Literal[1, 2, 3, 4, 5]
+    justification: str
+
+
 class CreateSessionRequest(BaseModel):
     role: str
 
@@ -43,6 +49,8 @@ class QASummaryItem(BaseModel):
     rationale: str | None
     difficulty: str | None
     source_page: int | None
+    score: int | None
+    score_justification: str | None
 
 
 class SessionSummaryResponse(BaseModel):
@@ -50,3 +58,4 @@ class SessionSummaryResponse(BaseModel):
     role: str
     qa_pairs: list[QASummaryItem]
     topics_covered: list[str]
+    coverage_percent: int
