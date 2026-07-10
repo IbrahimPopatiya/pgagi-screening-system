@@ -5,3 +5,5 @@ sqlalchemy
 pypdf 
 chromadb 
 sentence-transformers
+google-generativeai 
+pydantic
