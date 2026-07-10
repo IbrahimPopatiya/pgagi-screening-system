@@ -7,3 +7,9 @@ class ResumeProfile(BaseModel):
     technologies: list[str]
     domains: list[str]
     experience_level: Literal["entry", "mid", "senior"]
+
+
+class GeneratedQuestion(BaseModel):
+    question_text: str
+    rationale: str
+    difficulty: Literal["easy", "medium", "hard"]
