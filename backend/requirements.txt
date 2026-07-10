@@ -7,3 +7,4 @@ chromadb
 sentence-transformers
 google-generativeai 
 pydantic
+python-multipart

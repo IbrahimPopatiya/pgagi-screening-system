@@ -13,3 +13,40 @@ class GeneratedQuestion(BaseModel):
     question_text: str
     rationale: str
     difficulty: Literal["easy", "medium", "hard"]
+
+class CreateSessionRequest(BaseModel):
+    role: str
+
+
+class CreateSessionResponse(BaseModel):
+    session_id: int
+    role: str
+    status: str
+
+
+class QuestionResponse(BaseModel):
+    id: int
+    text: str
+    rationale: str | None
+    difficulty: str | None
+    order: int
+
+
+class SubmitAnswerRequest(BaseModel):
+    question_id: int
+    text: str
+
+
+class QASummaryItem(BaseModel):
+    question: str
+    answer: str | None
+    rationale: str | None
+    difficulty: str | None
+    source_page: int | None
+
+
+class SessionSummaryResponse(BaseModel):
+    session_id: int
+    role: str
+    qa_pairs: list[QASummaryItem]
+    topics_covered: list[str]
