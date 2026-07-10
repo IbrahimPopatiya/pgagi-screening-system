@@ -17,6 +17,7 @@ out/
 # Vector DB / generated data (regenerate via scripts/ingest.py)
 backend/data/chroma/
 backend/data/*.sqlite3
+backend/data/*.db
 
 # OS / editor junk
 .DS_Store
